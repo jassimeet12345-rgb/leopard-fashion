@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leopard Fashion | Premium Apparel & Footwear</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js for Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+
+    .font-serif-heading {
+      font-family: 'Playfair Display', serif;
+    }
+
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-card-gold {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(234, 179, 8, 0.3);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #eab308;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col custom-scrollbar">
+
+  <!-- ================= HEADER / NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo -->
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('shop')">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-slate-950 font-bold text-xl shadow-lg shadow-amber-500/20">
+            <i class="fa-solid font-bold text-lg">🐆</i>
+          </div>
+          <div>
+            <span class="text-2xl font-extrabold tracking-wider uppercase font-serif-heading gold-gradient-text">LEOPARD</span>
+            <span class="text-xs block text-slate-400 tracking-widest uppercase -mt-1">FASHION</span>
+          </div>
+        </div>
+
+        <!-- Search Bar with Live Suggestions -->
+        <div class="hidden md:flex flex-1 max-w-md mx-8 relative">
+          <div class="relative w-full">
+            <input type="text" id="searchInput" oninput="handleSearchInput(this.value)" placeholder="Search 'sh' for shirt, shoes, shorts..." 
+              class="w-full bg-slate-800/80 text-sm text-slate-100 placeholder-slate-400 rounded-full py-2.5 pl-10 pr-12 border border-slate-700 focus:outline-none focus:border-amber-500 transition-all">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+            
+            <!-- Visual Search Button -->
+            <button onclick="openVisualSearchModal()" title="Visual Photo Search" class="absolute right-2 top-1.5 p-1.5 text-amber-400 hover:text-amber-300 rounded-full hover:bg-slate-700 transition">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+          </div>
+
+          <!-- Auto-suggest Dropdown -->
+          <div id="searchSuggestions" class="hidden absolute top-12 left-0 right-0 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl overflow-hidden z-50">
+            <!-- Dynamic items -->
+          </div>
+        </div>
+
+        <!-- Nav Links & Cart -->
+        <div class="flex items-center space-x-4">
+          <button onclick="switchTab('shop')" class="text-sm font-medium text-slate-300 hover:text-amber-400 transition flex items-center space-x-1">
+            <i class="fa-solid fa-store"></i>
+            <span class="hidden sm:inline">Store</span>
+          </button>
+          
+          <button onclick="switchTab('work')" class="text-sm font-medium text-slate-300 hover:text-amber-400 transition flex items-center space-x-1">
+            <i class="fa-solid fa-briefcase"></i>
+            <span class="hidden sm:inline">Work With Us</span>
+          </button>
+
+          <!-- Cart Button -->
+          <button onclick="toggleCartModal(true)" class="relative p-2.5 text-slate-200 hover:text-amber-400 bg-slate-800 rounded-full border border-slate-700 transition">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span id="cartBadge" class="absolute -top-1 -right-1 bg-amber-500 text-slate-950 font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+          </button>
+
+          <!-- Auth / Panel Button -->
+          <button id="navAuthBtn" onclick="openLoginModal()" class="ml-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-semibold text-xs sm:text-sm rounded-full shadow-lg shadow-amber-500/20 hover:brightness-110 transition flex items-center space-x-1">
+            <i class="fa-solid fa-user-shield"></i>
+            <span>Portal Login</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Search Bar -->
+  <div class="md:hidden px-4 py-3 bg-slate-900 border-b border-slate-800 relative">
+    <div class="relative w-full">
+      <input type="text" oninput="handleSearchInput(this.value)" placeholder="Search shirt, shoes, shorts..." 
+        class="w-full bg-slate-800 text-sm text-slate-100 placeholder-slate-400 rounded-full py-2 pl-9 pr-10 border border-slate-700 focus:outline-none">
+      <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+      <button onclick="openVisualSearchModal()" class="absolute right-2 top-1.5 p-1 text-amber-400">
+        <i class="fa-solid fa-camera"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ================= SHOP TAB ================= -->
+    <div id="shopTab" class="tab-content space-y-8">
+      
+      <!-- Hero Banner -->
+      <div class="relative rounded-3xl overflow-hidden glass-card p-8 sm:p-12 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
+        <div class="space-y-4 max-w-xl text-center md:text-left">
+          <span class="inline-block px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-full text-xs font-semibold uppercase tracking-wider">New Collection 2026</span>
+          <h1 class="text-3xl sm:text-5xl font-extrabold font-serif-heading leading-tight">Elevate Your Style with <span class="gold-gradient-text">Leopard Fashion</span></h1>
+          <p class="text-slate-400 text-sm sm:text-base">Discover luxury streetwear, tailored suits, sneakers, and modern ethnic fashion. Cash on Delivery nationwide.</p>
+          <div class="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
+            <button onclick="filterCategory('All')" class="px-5 py-2.5 bg-amber-500 text-slate-950 font-bold rounded-full text-xs sm:text-sm hover:bg-amber-400 transition shadow-lg shadow-amber-500/20">Shop All</button>
+            <button onclick="openVisualSearchModal()" class="px-5 py-2.5 bg-slate-800 border border-slate-700 text-slate-200 font-medium rounded-full text-xs sm:text-sm hover:border-amber-500 transition flex items-center space-x-2">
+              <i class="fa-solid fa-camera text-amber-400"></i>
+              <span>Visual Image Match</span>
+            </button>
+          </div>
+        </div>
+        <div class="w-full md:w-80 h-64 sm:h-72 rounded-2xl overflow-hidden border-2 border-amber-500/20 shadow-2xl relative group">
+          <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80" alt="Fashion Banner" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+          <div class="absolute bottom-4 left-4 right-4 text-center">
+            <p class="text-xs text-amber-300 font-semibold uppercase">Premium Quality Guaranteed</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters & Categories -->
+      <div class="flex items-center justify-between flex-wrap gap-4 border-b border-slate-800 pb-4">
+        <div id="categoryContainer" class="flex items-center space-x-2 overflow-x-auto pb-2 custom-scrollbar w-full sm:w-auto">
+          <!-- Dynamic Category Pills -->
+        </div>
+        <div class="text-xs text-slate-400">
+          Showing <span id="productCount" class="text-amber-400 font-bold">0</span> Products
+        </div>
+      </div>
+
+      <!-- Product Grid -->
+      <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Dynamic Product Cards -->
+      </div>
+    </div>
+
+    <!-- ================= WORK WITH US TAB ================= -->
+    <div id="workTab" class="tab-content hidden space-y-8 max-w-2xl mx-auto">
+      <div class="text-center space-y-3">
+        <div class="w-16 h-16 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-center mx-auto text-amber-400 text-2xl">
+          <i class="fa-solid fa-handshake"></i>
+        </div>
+        <h2 class="text-3xl font-extrabold font-serif-heading gold-gradient-text">Work With Leopard Fashion</h2>
+        <p class="text-slate-400 text-sm">Join our operational team to process customer orders, coordinate parcels, and manage logistics dispatch.</p>
+      </div>
+
+      <div class="glass-card p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-xl space-y-6">
+        <form id="workApplicationForm" onsubmit="handleWorkApplication(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Full Name</label>
+            <input type="text" required id="applicantName" placeholder="e.g. Rahul Sharma" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:outline-none">
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Email Address</label>
+              <input type="email" required id="applicantEmail" placeholder="your@email.com" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Phone Number</label>
+              <input type="tel" required id="applicantPhone" placeholder="+91 9876543210" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:outline-none">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Why do you want to join our team?</label>
+            <textarea required id="applicantReason" rows="3" placeholder="Tell us briefly about your experience in packing or logistics..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:outline-none custom-scrollbar"></textarea>
+          </div>
+          <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-500/20 hover:brightness-110 transition">
+            Submit Application
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= EMPLOYEE PANEL ================= -->
+    <div id="employeePanelTab" class="tab-content hidden space-y-8">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div>
+          <span class="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-xs font-semibold">Employee Access</span>
+          <h2 class="text-2xl font-bold mt-1">Parcel & Order Dispatch Portal</h2>
+        </div>
+        <button onclick="logout()" class="px-4 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold rounded-lg hover:text-red-400 transition">
+          <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
+        </button>
+      </div>
+
+      <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+        <h3 class="text-lg font-semibold text-amber-400 flex items-center space-x-2">
+          <i class="fa-solid fa-box-archive"></i>
+          <span>Assigned Orders to Parcel</span>
+        </h3>
+        <p class="text-xs text-slate-400">View customer address details, copy shipping info, and fill delivery app requirements.</p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-900 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="p-3">Order ID</th>
+                <th class="p-3">Customer & Address Details</th>
+                <th class="p-3">Item Details</th>
+                <th class="p-3">Total (COD)</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="employeeOrdersTable" class="divide-y divide-slate-800">
+              <!-- Dynamic Rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= BOSS (ADMIN) PANEL ================= -->
+    <div id="bossPanelTab" class="tab-content hidden space-y-8">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4 flex-wrap gap-4">
+        <div>
+          <span class="px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full text-xs font-semibold">Owner Admin Access</span>
+          <h2 class="text-2xl font-bold mt-1 gold-gradient-text">Leopard Boss Dashboard</h2>
+        </div>
+        <div class="flex items-center space-x-3">
+          <button onclick="openAddProductModal()" class="px-4 py-2 bg-amber-500 text-slate-950 text-xs font-bold rounded-lg hover:bg-amber-400 transition flex items-center space-x-1 shadow-lg shadow-amber-500/20">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add New Product</span>
+          </button>
+          <button onclick="logout()" class="px-4 py-2 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold rounded-lg hover:text-red-400 transition">
+            <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Analytics Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <span class="text-xs text-slate-400 uppercase font-semibold">Weekly Orders</span>
+          <div class="text-2xl font-extrabold text-amber-400" id="weeklyOrdersCount">0</div>
+          <span class="text-xs text-emerald-400"><i class="fa-solid fa-arrow-trend-up"></i> +14% vs last week</span>
+        </div>
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <span class="text-xs text-slate-400 uppercase font-semibold">Monthly Orders</span>
+          <div class="text-2xl font-extrabold text-amber-400" id="monthlyOrdersCount">0</div>
+          <span class="text-xs text-emerald-400"><i class="fa-solid fa-arrow-trend-up"></i> +28% vs last month</span>
+        </div>
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <span class="text-xs text-slate-400 uppercase font-semibold">Yearly Sales (COD)</span>
+          <div class="text-2xl font-extrabold text-emerald-400" id="yearlyRevenue">₹0</div>
+          <span class="text-xs text-slate-400">Total processed</span>
+        </div>
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+          <span class="text-xs text-slate-400 uppercase font-semibold">Returns Rate</span>
+          <div class="text-2xl font-extrabold text-red-400" id="returnsCount">0</div>
+          <span class="text-xs text-slate-400">Low return threshold</span>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+          <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Orders Analytics (Weekly / Monthly / Yearly)</h3>
+          <div class="h-64">
+            <canvas id="salesChart"></canvas>
+          </div>
+        </div>
+        <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+          <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Returns vs Delivered Comparison</h3>
+          <div class="h-64">
+            <canvas id="returnsChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Work With Us Applications Approval List -->
+      <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+        <h3 class="text-base font-semibold text-amber-400 flex items-center space-x-2">
+          <i class="fa-solid fa-users-gear"></i>
+          <span>Employee Applications ("Work With Us")</span>
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-900 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="p-3">Applicant</th>
+                <th class="p-3">Contact Details</th>
+                <th class="p-3">Reason / Experience</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Approval Action</th>
+              </tr>
+            </thead>
+            <tbody id="applicationsTable" class="divide-y divide-slate-800">
+              <!-- Dynamic Rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Managed Products List -->
+      <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-semibold text-amber-400 flex items-center space-x-2">
+            <i class="fa-solid fa-shirt"></i>
+            <span>Active Store Inventory</span>
+          </h3>
+          <button onclick="openAddProductModal()" class="text-xs text-amber-400 hover:underline">+ Add Product</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-900 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="p-3">Product</th>
+                <th class="p-3">Category</th>
+                <th class="p-3">Price</th>
+                <th class="p-3">Sizes Available</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="bossProductsTable" class="divide-y divide-slate-800">
+              <!-- Dynamic Rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= MODALS & OVERLAYS ================= -->
+
+  <!-- LOGIN MODAL (Boss / Employee) -->
+  <div id="loginModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card-gold max-w-md w-full rounded-3xl p-6 sm:p-8 space-y-6 relative border border-amber-500/30">
+      <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="text-center space-y-2">
+        <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-center mx-auto text-amber-400 text-xl">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h3 class="text-2xl font-bold font-serif-heading gold-gradient-text">Portal Access</h3>
+        <p class="text-xs text-slate-400">Sign in with your Boss or Employee credentials</p>
+      </div>
+
+      <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Email Address</label>
+          <input type="email" id="loginEmail" required value="" placeholder="Enter your email" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Password</label>
+          <input type="password" id="loginPassword" required value="" placeholder="Enter your password" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:outline-none">
+        </div>
+        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-500/20 hover:brightness-110 transition">
+          Sign In
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- VISUAL PHOTO SEARCH MODAL -->
+  <div id="visualSearchModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full rounded-3xl p-6 sm:p-8 space-y-6 relative border border-slate-700">
+      <button onclick="closeVisualSearchModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="text-center space-y-2">
+        <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-center mx-auto text-amber-400 text-xl">
+          <i class="fa-solid fa-camera"></i>
+        </div>
+        <h3 class="text-xl font-bold">Visual Photo Search</h3>
+        <p class="text-xs text-slate-400">Upload any photo of clothes or shoes to match similar items in our catalog.</p>
+      </div>
+
+      <div class="border-2 border-dashed border-slate-700 rounded-2xl p-6 text-center space-y-3 hover:border-amber-500/50 transition cursor-pointer" onclick="document.getElementById('visualFileInput').click()">
+        <i class="fa-solid fa-cloud-arrow-up text-3xl text-amber-400"></i>
+        <p class="text-xs text-slate-300 font-medium">Click to upload photo or take picture</p>
+        <span class="text-[10px] text-slate-500 block">Supports JPG, PNG, WEBP</span>
+        <input type="file" id="visualFileInput" accept="image/*" class="hidden" onchange="processVisualSearch(this)">
+      </div>
+
+      <div id="visualSearchStatus" class="hidden text-center text-xs text-amber-400 animate-pulse">
+        Analyzing visual pattern and matching fashion catalogue...
+      </div>
+    </div>
+  </div>
+
+  <!-- CART & COD CHECKOUT MODAL -->
+  <div id="cartModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-end">
+    <div class="bg-slate-900 border-l border-slate-800 w-full max-w-md h-full p-6 space-y-6 flex flex-col justify-between overflow-y-auto custom-scrollbar">
+      <div>
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+          <h3 class="text-lg font-bold flex items-center space-x-2">
+            <i class="fa-solid fa-bag-shopping text-amber-400"></i>
+            <span>Your Shopping Cart</span>
+          </h3>
+          <button onclick="toggleCartModal(false)" class="text-slate-400 hover:text-slate-100">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <div id="cartItemsList" class="divide-y divide-slate-800 py-4 space-y-4">
+          <!-- Dynamic Cart Items -->
+        </div>
+      </div>
+
+      <!-- Checkout Form -->
+      <div id="checkoutSection" class="border-t border-slate-800 pt-4 space-y-4">
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-slate-400">Subtotal:</span>
+          <span id="cartSubtotal" class="font-bold text-slate-100">₹0</span>
+        </div>
+        <div class="flex items-center justify-between text-xs text-amber-400 bg-amber-500/10 p-2.5 rounded-lg border border-amber-500/20">
+          <span>Payment Method:</span>
+          <span class="font-bold">Cash on Delivery (COD) Only</span>
+        </div>
+
+        <form id="checkoutForm" onsubmit="handlePlaceOrder(event)" class="space-y-3 pt-2">
+          <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Parcel Delivery Details</h4>
+          <input type="text" id="custName" required placeholder="Full Name" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:border-amber-500 focus:outline-none">
+          <input type="tel" id="custPhone" required placeholder="Contact Number" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:border-amber-500 focus:outline-none">
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="custPincode" required placeholder="Area Pin Code" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:border-amber-500 focus:outline-none">
+            <input type="text" id="custCity" required placeholder="City / State" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:border-amber-500 focus:outline-none">
+          </div>
+          <textarea id="custAddress" required rows="2" placeholder="Complete Street Address, House No, Landmark" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs focus:border-amber-500 focus:outline-none custom-scrollbar"></textarea>
+
+          <button type="submit" id="placeOrderBtn" class="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-amber-500/20 hover:brightness-110 transition">
+            Confirm Cash on Delivery Order
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD PRODUCT MODAL (BOSS) -->
+  <div id="addProductModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-6 relative border border-slate-700 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <button onclick="closeAddProductModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="text-center space-y-1">
+        <h3 class="text-xl font-bold gold-gradient-text">Add New Fashion Product</h3>
+        <p class="text-xs text-slate-400">Configure letter/numeric sizes, colors, and pricing</p>
+      </div>
+
+      <form onsubmit="handleCreateProduct(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Product Title</label>
+          <input type="text" id="newProdName" required placeholder="e.g. Slim Fit Denim Shirt" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs focus:border-amber-500 focus:outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Category</label>
+            <select id="newProdCat" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs focus:border-amber-500 focus:outline-none">
+              <option value="Shirt">Shirt</option>
+              <option value="Shoes">Shoes</option>
+              <option value="Shorts">Shorts</option>
+              <option value="Pants">Pants / Jeans</option>
+              <option value="Ethnic">Ethnic Wear</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Price (₹)</label>
+            <input type="number" id="newProdPrice" required placeholder="1499" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs focus:border-amber-500 focus:outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Available Sizes (Comma Separated)</label>
+          <input type="text" id="newProdSizes" required placeholder="e.g. S, M, L, XL or 28, 30, 36, 42, 46" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs focus:border-amber-500 focus:outline-none">
+          <span class="text-[10px] text-slate-400">Supports both Letter (S, M, L) and Numbers (36, 46).</span>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Available Colors (Comma Separated)</label>
+          <input type="text" id="newProdColors" required placeholder="Black, Navy Blue, Olive" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs focus:border-amber-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Image URL</label>
+          <input type="url" id="newProdImg" required placeholder="https://images.unsplash.com/..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs focus:border-amber-500 focus:outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-500/20 hover:brightness-110 transition">
+          Publish Product
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 border-t border-slate-800 py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+      <div class="flex items-center justify-center space-x-2">
+        <span class="text-xl font-bold font-serif-heading gold-gradient-text">LEOPARD FASHION</span>
+      </div>
+      <p class="text-xs text-slate-500">© 2026 Leopard Fashion Inc. All rights reserved. Premium Fashion Storefront & Dispatch System.</p>
+    </div>
+  </footer>
+
+  <!-- ================= JAVASCRIPT APPLICATION LOGIC ================= -->
+  <script>
+    // INITIAL APP DATA & STATE
+    const BOSS_EMAIL = "piyush9801singh@gmail.com";
+    const BOSS_PASS = "_piyush._.01_";
+
+    let currentUser = null; // { role: 'boss' | 'employee', email: string }
+    let activeCategory = "All";
+
+    // INITIAL PRODUCTS
+    let products = JSON.parse(localStorage.getItem("lf_products")) || [
+      {
+        id: "p1",
+        name: "Classic Silk Black Shirt",
+        category: "Shirt",
+        price: 1899,
+        sizes: ["S", "M", "L", "XL", "38", "40", "42"],
+        colors: ["Black", "Midnight Blue"],
+        image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: "p2",
+        name: "Leopard Urban Sneaker Shoes",
+        category: "Shoes",
+        price: 3499,
+        sizes: ["6", "7", "8", "9", "10", "11"],
+        colors: ["White/Gold", "Triple Black"],
+        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: "p3",
+        name: "Tailored Linen Casual Shorts",
+        category: "Shorts",
+        price: 1199,
+        sizes: ["28", "30", "32", "34", "36", "46"],
+        colors: ["Beige", "Olive", "Navy"],
+        image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: "p4",
+        name: "Satin Evening Gown Dress",
+        category: "Ethnic",
+        price: 4999,
+        sizes: ["S", "M", "L", "XXL"],
+        colors: ["Emerald Green", "Ruby Red"],
+        image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=600&q=80"
+      }
+    ];
+
+    // INITIAL ORDERS
+    let orders = JSON.parse(localStorage.getItem("lf_orders")) || [];
+
+    // WORK WITH US APPLICATIONS
+    let applications = JSON.parse(localStorage.getItem("lf_applications")) || [];
+
+    // CART
+    let cart = [];
+
+    // CHARTS INSTANCES
+    let salesChartInstance = null;
+    let returnsChartInstance = null;
+
+    // SAVE DATA
+    function saveData() {
+      localStorage.setItem("lf_products", JSON.stringify(products));
+      localStorage.setItem("lf_orders", JSON.stringify(orders));
+      localStorage.setItem("lf_applications", JSON.stringify(applications));
+    }
+
+    // INIT ON LOAD
+    window.onload = function() {
+      renderCategoryPills();
+      renderProducts();
+      updateCartBadge();
+    };
+
+    // TAB SWITCHING
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+
+      if (tabName === 'shop') {
+        document.getElementById('shopTab').classList.remove('hidden');
+      } else if (tabName === 'work') {
+        document.getElementById('workTab').classList.remove('hidden');
+      } else if (tabName === 'employee') {
+        if (!currentUser) return openLoginModal();
+        document.getElementById('employeePanelTab').classList.remove('hidden');
+        renderEmployeeOrders();
+      } else if (tabName === 'boss') {
+        if (!currentUser || currentUser.role !== 'boss') return openLoginModal();
+        document.getElementById('bossPanelTab').classList.remove('hidden');
+        renderBossDashboard();
+      }
+    }
+
+    // SEARCH SUGGESTIONS LOGIC
+    function handleSearchInput(query) {
+      const suggestionsBox = document.getElementById('searchSuggestions');
+      if (!query.trim()) {
+        suggestionsBox.classList.add('hidden');
+        renderProducts();
+        return;
+      }
+
+      const q = query.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+
+      if (filtered.length === 0) {
+        suggestionsBox.innerHTML = `<div class="p-3 text-xs text-slate-400">No fashion matches found for "${query}"</div>`;
+      } else {
+        suggestionsBox.innerHTML = filtered.map(p => `
+          <div onclick="selectSearchMatch('${p.name}')" class="p-3 hover:bg-slate-700/60 cursor-pointer flex items-center space-x-3 border-b border-slate-700/50 last:border-none">
+            <img src="${p.image}" class="w-8 h-8 rounded object-cover">
+            <div>
+              <p class="text-xs font-semibold text-slate-200">${p.name}</p>
+              <span class="text-[10px] text-amber-400">${p.category} • ₹${p.price}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      suggestionsBox.classList.remove('hidden');
+      renderProducts(filtered);
+    }
+
+    function selectSearchMatch(name) {
+      document.getElementById('searchInput').value = name;
+      document.getElementById('searchSuggestions').classList.add('hidden');
+      const filtered = products.filter(p => p.name.toLowerCase() === name.toLowerCase());
+      renderProducts(filtered);
+    }
+
+    // VISUAL SEARCH SIMULATION
+    function openVisualSearchModal() {
+      document.getElementById('visualSearchModal').classList.remove('hidden');
+    }
+    function closeVisualSearchModal() {
+      document.getElementById('visualSearchModal').classList.add('hidden');
+      document.getElementById('visualSearchStatus').classList.add('hidden');
+    }
+    function processVisualSearch(input) {
+      if (input.files && input.files[0]) {
+        document.getElementById('visualSearchStatus').classList.remove('hidden');
+        setTimeout(() => {
+          closeVisualSearchModal();
+          // Match random product or shoes
+          const match = products.filter(p => p.category === 'Shoes' || p.category === 'Shirt');
+          renderProducts(match);
+          alert("Visual match found! Showing items that visually match your uploaded photo.");
+        }, 1500);
+      }
+    }
+
+    // RENDER CATEGORY PILLS
+    function renderCategoryPills() {
+      const categories = ["All", "Shirt", "Shoes", "Shorts", "Pants", "Ethnic"];
+      const container = document.getElementById('categoryContainer');
+      container.innerHTML = categories.map(cat => `
+        <button onclick="filterCategory('${cat}')" class="px-4 py-1.5 rounded-full text-xs font-semibold transition whitespace-nowrap ${activeCategory === cat ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
+          ${cat}
+        </button>
+      `).join('');
+    }
+
+    function filterCategory(cat) {
+      activeCategory = cat;
+      renderCategoryPills();
+      if (cat === 'All') {
+        renderProducts(products);
+      } else {
+        renderProducts(products.filter(p => p.category === cat));
+      }
+    }
+
+    // RENDER PRODUCTS GRID
+    function renderProducts(itemsToRender = products) {
+      const grid = document.getElementById('productGrid');
+      document.getElementById('productCount').innerText = itemsToRender.length;
+
+      if (itemsToRender.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-500 space-y-2">
+            <i class="fa-solid fa-shirt text-4xl"></i>
+            <p class="text-sm">No products found in this selection.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = itemsToRender.map(p => `
+        <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 flex flex-col justify-between group hover:border-amber-500/40 transition duration-300">
+          <div class="relative h-64 overflow-hidden bg-slate-900">
+            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+              ${p.category}
+            </span>
+          </div>
+
+          <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-bold text-slate-100 text-base leading-snug">${p.name}</h3>
+              <p class="text-amber-400 font-extrabold text-lg mt-1">₹${p.price}</p>
+            </div>
+
+            <!-- Size Select -->
+            <div class="space-y-1">
+              <label class="text-[10px] uppercase font-bold text-slate-400">Select Size:</label>
+              <div class="flex flex-wrap gap-1.5" id="sizes-${p.id}">
+                ${p.sizes.map((sz, idx) => `
+                  <button onclick="selectSize('${p.id}', '${sz}')" class="size-btn-${p.id} px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 border border-slate-700 text-slate-300 hover:border-amber-500 transition ${idx === 0 ? 'border-amber-500 text-amber-400 bg-amber-500/10' : ''}">
+                    ${sz}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Color Select -->
+            <div class="space-y-1">
+              <label class="text-[10px] uppercase font-bold text-slate-400">Select Color:</label>
+              <select id="color-${p.id}" class="w-full bg-slate-900 border border-slate-700 rounded-lg text-xs py-1.5 px-2 text-slate-300 focus:outline-none">
+                ${p.colors.map(c => `<option value="${c}">${c}</option>`).join('')}
+              </select>
+            </div>
+
+            <button onclick="addToCart('${p.id}')" class="w-full py-2.5 bg-slate-800 hover:bg-amber-500 hover:text-slate-950 border border-slate-700 hover:border-amber-500 text-slate-200 font-bold text-xs rounded-xl transition flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-cart-plus"></i>
+              <span>Add to Cart</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // SELECTED SIZE STATE HELPER
+    let selectedSizes = {};
+    function selectSize(prodId, size) {
+      selectedSizes[prodId] = size;
+      const btns = document.querySelectorAll(`.size-btn-${prodId}`);
+      btns.forEach(btn => {
+        if (btn.innerText.trim() === size) {
+          btn.className = `size-btn-${prodId} px-2.5 py-1 text-xs font-semibold rounded border border-amber-500 text-amber-400 bg-amber-500/10`;
+        } else {
+          btn.className = `size-btn-${prodId} px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 border border-slate-700 text-slate-300`;
+        }
+      });
+    }
+
+    // ADD TO CART
+    function addToCart(prodId) {
+      const prod = products.find(p => p.id === prodId);
+      const chosenSize = selectedSizes[prodId] || prod.sizes[0];
+      const chosenColor = document.getElementById(`color-${prodId}`).value;
+
+      cart.push({
+        ...prod,
+        selectedSize: chosenSize,
+        selectedColor: chosenColor,
+        cartItemId: Date.now()
+      });
+
+      updateCartBadge();
+      toggleCartModal(true);
+    }
+
+    function updateCartBadge() {
+      document.getElementById('cartBadge').innerText = cart.length;
+    }
+
+    function toggleCartModal(show) {
+      const modal = document.getElementById('cartModal');
+      if (show) {
+        renderCartItems();
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function renderCartItems() {
+      const list = document.getElementById('cartItemsList');
+      let subtotal = 0;
+
+      if (cart.length === 0) {
+        list.innerHTML = `<p class="text-xs text-slate-500 text-center py-8">Your cart is empty.</p>`;
+        document.getElementById('cartSubtotal').innerText = "₹0";
+        return;
+      }
+
+      list.innerHTML = cart.map(item => {
+        subtotal += item.price;
+        return `
+          <div class="flex items-center justify-between py-2">
+            <div class="flex items-center space-x-3">
+              <img src="${item.image}" class="w-12 h-12 rounded-lg object-cover">
+              <div>
+                <h4 class="text-xs font-bold text-slate-200">${item.name}</h4>
+                <p class="text-[10px] text-slate-400">Size: <span class="text-amber-400 font-bold">${item.selectedSize}</span> | Color: ${item.selectedColor}</p>
+                <span class="text-xs font-extrabold text-amber-400">₹${item.price}</span>
+              </div>
+            </div>
+            <button onclick="removeFromCart(${item.cartItemId})" class="text-slate-500 hover:text-red-400 text-xs">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('cartSubtotal').innerText = `₹${subtotal}`;
+    }
+
+    function removeFromCart(cartItemId) {
+      cart = cart.filter(c => c.cartItemId !== cartItemId);
+      updateCartBadge();
+      renderCartItems();
+    }
+
+    // PLACE ORDER (COD ONLY)
+    function handlePlaceOrder(e) {
+      e.preventDefault();
+      if (cart.length === 0) return alert("Your cart is empty!");
+
+      const newOrder = {
+        orderId: "LPD-" + Math.floor(100000 + Math.random() * 900000),
+        customerName: document.getElementById('custName').value,
+        phone: document.getElementById('custPhone').value,
+        pincode: document.getElementById('custPincode').value,
+        city: document.getElementById('custCity').value,
+        address: document.getElementById('custAddress').value,
+        items: [...cart],
+        totalAmount: cart.reduce((sum, i) => sum + i.price, 0),
+        status: "Pending Dispatch",
+        date: new Date().toLocaleDateString()
+      };
+
+      orders.unshift(newOrder);
+      saveData();
+
+      cart = [];
+      updateCartBadge();
+      toggleCartModal(false);
+      document.getElementById('checkoutForm').reset();
+
+      alert(`🎉 Order Placed Successfully via Cash on Delivery!\nYour Order ID is ${newOrder.orderId}. We will parcel it soon.`);
+    }
+
+    // WORK WITH US APPLICATION
+    function handleWorkApplication(e) {
+      e.preventDefault();
+      const newApp = {
+        id: "APP-" + Date.now(),
+        name: document.getElementById('applicantName').value,
+        email: document.getElementById('applicantEmail').value,
+        phone: document.getElementById('applicantPhone').value,
+        reason: document.getElementById('applicantReason').value,
+        status: "Pending Approval"
+      };
+
+      applications.unshift(newApp);
+      saveData();
+
+      document.getElementById('workApplicationForm').reset();
+      alert("Application Submitted! The Boss will review your request and grant employee access.");
+    }
+
+    // AUTH / LOGIN SYSTEM
+    function openLoginModal() {
+      // CLEAR FIELDS FOR SECURITY - PREVENT AUTO-FILL
+      document.getElementById('loginEmail').value = "";
+      document.getElementById('loginPassword').value = "";
+      document.getElementById('loginModal').classList.remove('hidden');
+    }
+    function closeLoginModal() {
+      document.getElementById('loginModal').classList.add('hidden');
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPassword').value.trim();
+
+      // Check Boss Auth
+      if (email === BOSS_EMAIL && pass === BOSS_PASS) {
+        currentUser = { role: 'boss', email: email };
+        closeLoginModal();
+        updateNavAuth();
+        switchTab('boss');
+        return;
+      }
+
+      // Check Employee Auth (Approved Applicants)
+      const approvedEmp = applications.find(a => a.email === email && a.status === 'Approved Access');
+      if (approvedEmp && pass === 'employee123') {
+        currentUser = { role: 'employee', email: email };
+        closeLoginModal();
+        updateNavAuth();
+        switchTab('employee');
+        return;
+      }
+
+      alert("Invalid Credentials! Please check your email and password.");
+    }
+
+    function updateNavAuth() {
+      const btn = document.getElementById('navAuthBtn');
+      if (currentUser) {
+        btn.innerHTML = `<i class="fa-solid fa-user-check"></i> <span>${currentUser.role === 'boss' ? 'Boss Panel' : 'Employee Panel'}</span>`;
+        btn.onclick = () => switchTab(currentUser.role);
+      } else {
+        btn.innerHTML = `<i class="fa-solid fa-user-shield"></i> <span>Portal Login</span>`;
+        btn.onclick = () => openLoginModal();
+      }
+    }
+
+    function logout() {
+      currentUser = null;
+      updateNavAuth();
+      switchTab('shop');
+    }
+
+    // EMPLOYEE ORDERS TABLE
+    function renderEmployeeOrders() {
+      const tbody = document.getElementById('employeeOrdersTable');
+      if (orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">No customer orders available for dispatch.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => `
+        <tr class="hover:bg-slate-800/50">
+          <td class="p-3 font-mono font-bold text-amber-400">${o.orderId}</td>
+          <td class="p-3">
+            <p class="font-bold text-slate-200">${o.customerName} (${o.phone})</p>
+            <p class="text-[10px] text-slate-400">${o.address}, ${o.city} - PIN: ${o.pincode}</p>
+          </td>
+          <td class="p-3">
+            ${o.items.map(i => `<span class="block text-[11px] text-slate-300">• ${i.name} (Size: ${i.selectedSize}, ${i.selectedColor})</span>`).join('')}
+          </td>
+          <td class="p-3 font-bold text-emerald-400">₹${o.totalAmount} (COD)</td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${o.status === 'Delivered' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'}">
+              ${o.status}
+            </span>
+          </td>
+          <td class="p-3 text-right space-x-1">
+            <button onclick="copyParcelDetails('${o.orderId}')" title="Copy Info for Courier App" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded">
+              <i class="fa-solid fa-copy"></i>
+            </button>
+            <button onclick="updateOrderStatus('${o.orderId}', 'Dispatched to Courier')" class="px-2 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-[10px]">
+              Dispatch
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function copyParcelDetails(orderId) {
+      const o = orders.find(item => item.orderId === orderId);
+      const text = `PARCEL DETAILS:\nName: ${o.customerName}\nPhone: ${o.phone}\nAddress: ${o.address}, ${o.city}\nPin Code: ${o.pincode}\nItem: ${o.items.map(i=>i.name).join(', ')}\nCOD Amount: ₹${o.totalAmount}`;
+      navigator.clipboard.writeText(text);
+      alert("Parcel Details Copied to Clipboard! You can paste it into delivery apps.");
+    }
+
+    function updateOrderStatus(orderId, status) {
+      const o = orders.find(item => item.orderId === orderId);
+      if (o) {
+        o.status = status;
+        saveData();
+        renderEmployeeOrders();
+      }
+    }
+
+    // BOSS DASHBOARD ANALYTICS & MANAGED PRODUCTS
+    function renderBossDashboard() {
+      // Analytics Counts
+      document.getElementById('weeklyOrdersCount').innerText = orders.length;
+      document.getElementById('monthlyOrdersCount').innerText = orders.length;
+      const totalRev = orders.reduce((sum, o) => sum + o.totalAmount, 0);
+      document.getElementById('yearlyRevenue').innerText = `₹${totalRev}`;
+      document.getElementById('returnsCount').innerText = "0";
+
+      // Render Applications
+      const appTable = document.getElementById('applicationsTable');
+      if (applications.length === 0) {
+        appTable.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">No job applications submitted yet.</td></tr>`;
+      } else {
+        appTable.innerHTML = applications.map(a => `
+          <tr class="hover:bg-slate-800/50">
+            <td class="p-3 font-bold text-slate-200">${a.name}</td>
+            <td class="p-3">${a.email}<br><span class="text-[10px] text-slate-400">${a.phone}</span></td>
+            <td class="p-3 text-slate-400">${a.reason}</td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${a.status === 'Approved Access' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'}">
+                ${a.status}
+              </span>
+            </td>
+            <td class="p-3 text-right">
+              ${a.status !== 'Approved Access' ? `
+                <button onclick="approveApplication('${a.id}')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[10px] font-bold">
+                  Approve & Grant Access
+                </button>
+              ` : `<span class="text-[10px] text-slate-500">Access Granted (Pass: employee123)</span>`}
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Render Managed Products
+      const prodTable = document.getElementById('bossProductsTable');
+      prodTable.innerHTML = products.map(p => `
+        <tr class="hover:bg-slate-800/50">
+          <td class="p-3 flex items-center space-x-2">
+            <img src="${p.image}" class="w-8 h-8 rounded object-cover">
+            <span class="font-bold text-slate-200">${p.name}</span>
+          </td>
+          <td class="p-3 text-slate-400">${p.category}</td>
+          <td class="p-3 font-bold text-amber-400">₹${p.price}</td>
+          <td class="p-3 text-xs text-slate-300">${p.sizes.join(', ')}</td>
+          <td class="p-3 text-right">
+            <button onclick="deleteProduct('${p.id}')" class="text-red-400 hover:text-red-300 text-xs">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Charts
+      renderAnalyticsCharts();
+    }
+
+    function approveApplication(appId) {
+      const app = applications.find(a => a.id === appId);
+      if (app) {
+        app.status = 'Approved Access';
+        saveData();
+        renderBossDashboard();
+        alert(`Access Approved for ${app.name}!\nTheir employee password is: employee123`);
+      }
+    }
+
+    function openAddProductModal() {
+      document.getElementById('addProductModal').classList.remove('hidden');
+    }
+    function closeAddProductModal() {
+      document.getElementById('addProductModal').classList.add('hidden');
+    }
+
+    function handleCreateProduct(e) {
+      e.preventDefault();
+      const newProd = {
+        id: "prod-" + Date.now(),
+        name: document.getElementById('newProdName').value,
+        category: document.getElementById('newProdCat').value,
+        price: parseFloat(document.getElementById('newProdPrice').value),
+        sizes: document.getElementById('newProdSizes').value.split(',').map(s => s.trim()),
+        colors: document.getElementById('newProdColors').value.split(',').map(c => c.trim()),
+        image: document.getElementById('newProdImg').value
+      };
+
+      products.unshift(newProd);
+      saveData();
+      closeAddProductModal();
+      renderProducts();
+      renderBossDashboard();
+      alert("New Fashion Product Published Successfully!");
+    }
+
+    function deleteProduct(prodId) {
+      if (confirm("Are you sure you want to delete this product?")) {
+        products = products.filter(p => p.id !== prodId);
+        saveData();
+        renderProducts();
+        renderBossDashboard();
+      }
+    }
+
+    // CHART.JS ANALYTICS
+    function renderAnalyticsCharts() {
+      const ctx1 = document.getElementById('salesChart').getContext('2d');
+      const ctx2 = document.getElementById('returnsChart').getContext('2d');
+
+      if (salesChartInstance) salesChartInstance.destroy();
+      if (returnsChartInstance) returnsChartInstance.destroy();
+
+      salesChartInstance = new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{
+            label: 'Orders',
+            data: [2, 4, 3, 6, 5, 8, orders.length],
+            borderColor: '#eab308',
+            backgroundColor: 'rgba(234, 179, 8, 0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { grid: { color: 'rgba(255,255,255,0.05)' } }
+          }
+        }
+      });
+
+      returnsChartInstance = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          labels: ['Successful Delivered', 'Returns / Exchanges'],
+          datasets: [{
+            data: [orders.length || 1, 0],
+            backgroundColor: ['#10b981', '#f43f5e']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
+
